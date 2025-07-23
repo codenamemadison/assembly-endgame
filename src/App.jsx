@@ -6,18 +6,8 @@ import { languages } from "./languages.js"
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const languageElements = languages.map((lan) => {
-      return (
-          <div 
-              style={{
-                  backgroundColor: lan.backgroundColor,
-                  color: lan.color
-              }}
-              key={lan.name}
-          >{lan.name}</div>
-      )
-  })
+  const [currentWord, setCurrentWord] = useState("react")
+
   return (
     <main>
         <header>
@@ -28,9 +18,24 @@ function App() {
             <h2>You win! </h2>
             Well done 🎉
         </section>
-        <div id="languages-container">
-          {languageElements}
-        </div>
+        <section id="languages-container">
+          {languages.map((lan) => {
+            return (
+                <div 
+                    style={{
+                        backgroundColor: lan.backgroundColor,
+                        color: lan.color
+                    }}
+                    key={lan.name}
+                >{lan.name}</div>
+                )
+            })}
+        </section>
+        <section id="word-section">
+          {currentWord.split('').map((letter, index) => (
+              <span className="letter-box" key={index}>{letter.toUpperCase()}</span>
+          ))}
+        </section>
     </main>
   )
 }
