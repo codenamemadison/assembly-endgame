@@ -7,7 +7,27 @@ import './App.css'
 
 function App() {
   const [currentWord, setCurrentWord] = useState("react")
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
+  const langauges = languages.map((lan) => {
+    return (
+        <div 
+            style={{
+                backgroundColor: lan.backgroundColor,
+                color: lan.color
+            }}
+            key={lan.name}
+        >{lan.name}</div>
+    )
+  })
+
+  const word = currentWord.split('').map((letter, index) => (
+    <span className="letter-box" key={index}>{letter.toUpperCase()}</span>
+  ))
+
+  const keyboardElements = alphabet.split("").map((letter) => (
+    <button key={letter}>{letter.toUpperCase()}</button>
+  ))
   return (
     <main>
         <header>
@@ -19,23 +39,15 @@ function App() {
             Well done 🎉
         </section>
         <section id="languages-container">
-          {languages.map((lan) => {
-            return (
-                <div 
-                    style={{
-                        backgroundColor: lan.backgroundColor,
-                        color: lan.color
-                    }}
-                    key={lan.name}
-                >{lan.name}</div>
-                )
-            })}
+          {langauges}
         </section>
         <section id="word-section">
-          {currentWord.split('').map((letter, index) => (
-              <span className="letter-box" key={index}>{letter.toUpperCase()}</span>
-          ))}
+          {word}
         </section>
+        <section id="keyboard"> 
+          {keyboardElements}
+        </section>
+        <button className="new-game">New Game</button>
     </main>
   )
 }
