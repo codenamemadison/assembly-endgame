@@ -87,6 +87,8 @@ header > p {
     border-bottom: 1px solid #F9F4DA;
     font-weight: 700;
     font-size: 1.5rem;
+    height: 40px;
+    width: 40px;
 }
 
 
