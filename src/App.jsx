@@ -9,42 +9,51 @@ import './App.css'
 function App() {
   const [currentWord, setCurrentWord] = useState("react")
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
-  const [guess, setGuess] = useState([])
-    
+  const [guessLetters, setGuessLetters] = useState([])
+  
+  let wrongGuessCount = 0
+  for (let letter of guessLetters) {
+    if (!currentWord.includes(letter)) wrongGuessCount++
+  }
+
   function updateGuess(letter) {
-    setGuess(prevGuess => 
+    setGuessLetters(prevGuess => 
         prevGuess.includes(letter) ? 
             prevGuess : 
             [...prevGuess, letter]
     )
   }
 
-  const langauges = languages.map((lan) => {
+  const langauges = languages.map((lan, index) => {
+    const hideLang = index <= wrongGuessCount - 1
+    const className = clsx("chip", {lost: hideLang})
     return (
-        <div 
+        <span 
+            className={className}
             style={{
                 backgroundColor: lan.backgroundColor,
                 color: lan.color
             }}
             key={lan.name}
-        >{lan.name}</div>
+        >{lan.name}</span>
     )
   })
 
   const word = currentWord.split('').map((letter, index) => {
-    const isGuessed = guess.includes(letter) // if we guessed the letter
+    const isGuessed = guessLetters.includes(letter) // if we guessed the letter
     return (
     <span className="letter-box" key={index}>{isGuessed && letter.toUpperCase()}</span>
   )})
 
   const keyboardElements = alphabet.split("").map((letter) => {
-    const isGuessed = guess.includes(letter)
+    const isGuessed = guessLetters.includes(letter)
     const isRight = isGuessed && currentWord.includes(letter)
     const isWrong = isGuessed && !currentWord.includes(letter)
     const className = clsx({
         correct: isRight,
         wrong: isWrong
     })
+
     return (<button 
       onClick={() => updateGuess(letter)} 
       key={letter}

@@ -68,9 +68,25 @@ header > p {
     max-width: 400px;
 }
 
-#languages-container > div {
+.chip {
     padding: 10px;
     border-radius: 5px;
+    position: relative;
+}
+
+/* Dimmed overlay with skull on "lost" languages */
+.chip.lost::before {
+    content: "💀";
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-size: 0.85rem;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 
@@ -83,7 +99,7 @@ header > p {
 
 .letter-box {
     background-color: #323232;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     border-bottom: 1px solid #F9F4DA;
     font-weight: 700;
     font-size: 1.5rem;
