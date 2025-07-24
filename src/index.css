@@ -124,3 +124,11 @@ button.new-game {
     font-family: "Hanken Grotesk", Arial, sans-serif;
     font-size: 1rem;
 }
+
+#keyboard > button.correct {
+    background-color: #10A95B;
+}
+
+#keyboard > button.wrong {
+    background-color: #EC5D49;
+}

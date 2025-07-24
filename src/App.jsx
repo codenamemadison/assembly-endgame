@@ -2,12 +2,22 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { languages } from "./languages.js"
+import clsx from 'clsx'
 
 import './App.css'
 
 function App() {
   const [currentWord, setCurrentWord] = useState("react")
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
+  const [guess, setGuess] = useState([])
+    
+  function updateGuess(letter) {
+    setGuess(prevGuess => 
+        prevGuess.includes(letter) ? 
+            prevGuess : 
+            [...prevGuess, letter]
+    )
+  }
 
   const langauges = languages.map((lan) => {
     return (
@@ -25,9 +35,20 @@ function App() {
     <span className="letter-box" key={index}>{letter.toUpperCase()}</span>
   ))
 
-  const keyboardElements = alphabet.split("").map((letter) => (
-    <button key={letter}>{letter.toUpperCase()}</button>
-  ))
+  const keyboardElements = alphabet.split("").map((letter) => {
+    const isGuessed = guess.includes(letter)
+    const isRight = isGuessed && currentWord.includes(letter)
+    const isWrong = isGuessed && !currentWord.includes(letter)
+    const className = clsx({
+        correct: isRight,
+        wrong: isWrong
+    })
+    return (<button 
+      onClick={() => updateGuess(letter)} 
+      key={letter}
+      className={className}
+    >{letter.toUpperCase()}</button>)
+})
   return (
     <main>
         <header>
