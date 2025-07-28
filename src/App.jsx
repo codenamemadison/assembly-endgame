@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import { languages } from "./languages.js"
 import clsx from 'clsx'
 import { getFarewellText, chooseWord } from './utils.js'
+import Confetti from "react-confetti"
+import { useWindowSize } from 'react-use'
 
 import './App.css'
 
@@ -13,6 +15,8 @@ function App() {
   const [currentWord, setCurrentWord] = useState(() => chooseWord()) 
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
   const [guessLetters, setGuessLetters] = useState([])
+
+  const { width, height } = useWindowSize()
   
   // DERIVED VALUES
   let wrongGuessCount = 0
@@ -52,8 +56,12 @@ function App() {
 
   const word = currentWord.split('').map((letter, index) => {
     const isGuessed = guessLetters.includes(letter) // if we guessed the letter
+    const shouldRevealLetter = isGameLost || isGuessed
+
     return (
-    <span className="letter-box" key={index}>{isGuessed && letter.toUpperCase()}</span>
+      <span className={clsx("letter-box", {"game-over-reveal": isGameLost && !isGuessed})} key={index}>
+        {shouldRevealLetter && letter.toUpperCase()}
+      </span>
   )})
 
   const keyboardElements = alphabet.split("").map((letter) => {
@@ -100,8 +108,20 @@ function App() {
       )
     }
   }
+
+  function resetGame() {
+    console.log("hi")
+    setCurrentWord(chooseWord())
+    setGuessLetters([])
+  }
   return (
     <main>
+        {isGameWon && <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={1000}
+        />}
         <header>
             <h1>Assembly: Endgame</h1>
             <p>Guess the word in under 8 attempts to keep the programming world safe from Assembly!</p>
@@ -147,7 +167,7 @@ function App() {
         <section id="keyboard"> 
           {keyboardElements}
         </section>
-        {isGameOver && <button className="new-game">New Game</button>}
+        {isGameOver && <button className="new-game" onClick={resetGame}>New Game</button>}
     </main>
   )
 }

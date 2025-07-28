@@ -164,6 +164,9 @@ button.new-game {
     background-color: #EC5D49;
 }
 
+.game-over-reveal {
+    color: #EC5D49;;
+}
 
 .sr-only {
     position: absolute;
@@ -176,3 +179,4 @@ button.new-game {
     white-space: nowrap;
     border: 0;
 }
+
