@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { languages } from "./languages.js"
 import clsx from 'clsx'
+import { getFarewellText } from './utils.js'
 
 import './App.css'
 
@@ -11,10 +12,18 @@ function App() {
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
   const [guessLetters, setGuessLetters] = useState([])
   
+  // DERIVED VALUES
   let wrongGuessCount = 0
   for (let letter of guessLetters) {
     if (!currentWord.includes(letter)) wrongGuessCount++
   }
+  const numGuessesLeft = languages.length - 1
+  const isGameLost = wrongGuessCount >= languages.length - 1
+  const isGameWon = currentWord.split("").every(letter => guessLetters.includes(letter))
+  const isGameOver = isGameLost || isGameWon
+  // alternative to rendering message for last language killed off:
+  const lastGuessedLetter = guessLetters[guessLetters.length - 1]
+  // const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
 
   function updateGuess(letter) {
     setGuessLetters(prevGuess => 
@@ -58,17 +67,55 @@ function App() {
       onClick={() => updateGuess(letter)} 
       key={letter}
       className={className}
+      disabled={isGameOver ? true : false}
+      aria-disabled={guessLetters.includes(letter)}
+      aria-label={`Letter ${letter}`}
     >{letter.toUpperCase()}</button>)
-})
+  })
+
+  function renderGameStatus() {
+    if (!isGameOver) {
+      if (wrongGuessCount > 0) {
+        const lostMessage = getFarewellText(languages[wrongGuessCount - 1].name)
+        return (<h2>{lostMessage}</h2>)
+      } else {
+        return null
+      }
+    }
+    if (isGameWon) {
+      return (
+        <>
+          <h2>You win!</h2>
+          <p>Well done! 🎉</p>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <h2>You lose!</h2>
+          <p>Better start learning Assembly 😭</p>
+        </>
+      )
+    }
+  }
   return (
     <main>
         <header>
             <h1>Assembly: Endgame</h1>
             <p>Guess the word in under 8 attempts to keep the programming world safe from Assembly!</p>
         </header>
-        <section id="status-bar">
-            <h2>You win! </h2>
-            Well done 🎉
+        <section 
+          id="status-bar"
+          className={clsx({
+              "won-status": isGameWon,
+              "lose-status": isGameLost,
+              "farewell-status": wrongGuessCount > 0 && !isGameOver
+          })}
+          aria-live="polite" 
+          role="status" 
+          >
+            {renderGameStatus()}
+          
         </section>
         <section id="languages-container">
           {langauges}
@@ -76,10 +123,29 @@ function App() {
         <section id="word-section">
           {word}
         </section>
+        
+        {/* Combined visually-hidden aria-live region for status updates */}
+        <section 
+          className="sr-only" 
+          aria-live="polite" 
+          role="status"
+        >
+            <p>
+              {currentWord.includes(lastGuessedLetter) ? 
+                  `Correct! The letter ${lastGuessedLetter} is in the word.` : 
+                  `Sorry, the letter ${lastGuessedLetter} is not in the word.`
+              }
+              You have {numGuessesLeft} attempts left.
+            </p>
+            <p>Current word: {currentWord.split("").map(letter => 
+            guessLetters.includes(letter) ? letter + "." : "blank.")
+            .join(" ")}</p>
+        
+        </section>
         <section id="keyboard"> 
           {keyboardElements}
         </section>
-        <button className="new-game">New Game</button>
+        {isGameOver && <button className="new-game">New Game</button>}
     </main>
   )
 }
