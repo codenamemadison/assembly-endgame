@@ -3,12 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { languages } from "./languages.js"
 import clsx from 'clsx'
-import { getFarewellText } from './utils.js'
+import { getFarewellText, chooseWord } from './utils.js'
 
 import './App.css'
 
 function App() {
-  const [currentWord, setCurrentWord] = useState("react")
+  // use lazy initialization to prevent excess re-renders
+  // => after first render, doesnt run
+  const [currentWord, setCurrentWord] = useState(() => chooseWord()) 
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
   const [guessLetters, setGuessLetters] = useState([])
   
