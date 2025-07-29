@@ -1,5 +1,5 @@
 # Assembly Endgame
-A React-based web application similar to Hangman in which you try to guess the chosen word. Each wrong attempt "kills off" a coding language, and it is up to you to guess the correct word without killing off everything but assembly.
+A **React-based web application** similar to Hangman in which you try to guess the chosen word. Each wrong attempt "kills off" a coding language, and it is up to you to guess the correct word without killing off everything but assembly.
 
 *Note: This was a project built by me while following the "Learn React" Scrimba certification course, in which the course provided the design and concept*
 
